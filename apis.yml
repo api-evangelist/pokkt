@@ -1,7 +1,26 @@
 aid: pokkt
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/pokkt.png
 name: Pokkt
-description: Pokkt is a company surfaced as a portfolio company of 500-global and added to the API Evangelist
-  network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+description: >-
+  Pokkt is a mobile-first advertising and app monetization platform, part of AnyMind Group,
+  serving app publishers and game developers with SDK-based ad monetization (rewarded video,
+  interstitial, and video advertising) and serving advertisers with performance campaigns,
+  remarketing, and connected-TV (CTV) inventory across India, Southeast Asia, and MENA. The
+  platform operates through a web console for campaign management, targeting, exchange-log
+  tracking, pixel-based post-click engagement, and reporting. This profile was surfaced as a
+  portfolio company of 500 Global and is being enriched by the API Evangelist pipeline; no
+  public OpenAPI, SDK registry package, or machine-readable API surface has been confirmed.
 url: https://raw.githubusercontent.com/api-evangelist/pokkt/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -11,9 +30,15 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-20'
 tags:
 - Company
+- Advertising
+- Monetization
+- Mobile
+- Video Advertising
+- AdTech
+- Remarketing
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -21,5 +46,16 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/pokkt-domain-security.yml
 - type: Website
   url: https://pokkt.com
+- type: Documentation
+  url: https://docs.pokkt.com
+- type: GitHubOrganization
+  url: https://github.com/AnyMindGroup
+x-enrichment:
+  date: '2026-07-20'
+  status: minimal
+  artifacts_added: 1
+  pass: local-v1
