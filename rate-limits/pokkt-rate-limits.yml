@@ -1,0 +1,25 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/api-guide/interstitial-api.md,
+  https://wiki.pokkt.com/api-guide/vast-video-api.md,
+  https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md, plus the full 50-page llms.txt index
+limit_count: 0
+note: >-
+  POKKT documents no rate limits, no quotas, no QPS ceilings and no throttling behaviour on any
+  of its published surfaces — searched every page in the developer wiki index including the FAQ
+  sections of both API integration guides and the DSP bid-request specification, where a QPS cap
+  would normally be stated. No RateLimit-*, X-RateLimit-* or Retry-After response header is
+  documented, and no 429 response is described anywhere; the only documented failure modes are an
+  empty array (no fill), a status "0" body on HTTP 200, and HTTP 204 for an OpenRTB no-bid. No
+  live limits were probed either: the ad-serving endpoints require a valid issued appId, so
+  observing headers would have meant sending traffic to a production ad server without an
+  account, which this pipeline does not do.
+response_headers_documented: []
+status_on_exhaustion: null
+limits: []
+observed:
+- surface: dsp-openrtb
+  constraint: 'One impression object per bid request — "we do not support multiple impressions object per request as of now."'
+  kind: request-shape constraint, not a rate limit
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md

@@ -1,0 +1,62 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/api-guide/ad-interstitial.md,
+  https://wiki.pokkt.com/api-guide/mobile-web-video-integration.md
+note: >-
+  POKKT ships two client-side embeddable surfaces for web publishers, distinct from the native
+  SDKs catalogued in packages/. Both are configured with published, verbatim-copied values; no
+  parameter below is inferred.
+
+families:
+- family: ad-tag
+  name: POKKT Ad Tag (interstitial / banner)
+  kind: script-tag loader
+  loader: https://pokktjs.pokkt.com/interstitial/pokkt.js
+  configuration_object: window.pokktConfig
+  docs: https://wiki.pokkt.com/api-guide/ad-interstitial.md
+  version: null
+  pinned: false
+  note: >-
+    The loader URL is unpinned — it always resolves to whatever build POKKT is currently serving,
+    so a publisher cannot tell which version they have embedded. The integration guide publishes
+    the tag over plain http://, and as of a 2026-08-12 probe the HTTPS certificate on
+    pokktjs.pokkt.com HAS EXPIRED: the script loads over http:// and over https:// with
+    verification disabled (200, 5,429 bytes) but fails verification in any browser, so the
+    component is effectively unloadable from an HTTPS page. Documentation last updated
+    27 December 2016.
+  mandatory_parameters:
+  - {name: _appId, provided_by: POKKT}
+  - {name: _width, provided_by: publisher}
+  - {name: _height, provided_by: publisher}
+  - {name: _deviceId, provided_by: publisher}
+  - {name: _adId, provided_by: publisher}
+  optional_parameters:
+  - {name: _adFormat, values: '1 = banner, 3 = interstitial'}
+  - {name: _dnt, description: Do Not Track (y or n)}
+  - {name: _connectionType}
+  - {name: _appName}
+  - {name: _appBundleName}
+  - {name: _ipAddress}
+  - {name: _carrierName}
+  - {name: _appStoreUrl}
+  - {name: _clickTracker}
+  - {name: _impressionTracker}
+  - {name: _lat}
+  - {name: _lon}
+  - {name: _cb, description: cache buster}
+- family: hosted-video-player
+  name: POKKT Mobile Web Video (videoWap)
+  kind: hosted page, embedded by URL
+  url: 'http://vdo.pokkt.com/videoWap?appId=<publisher_app_id>&format=1&encodedparams=<urlencoded key=value pairs>'
+  docs: https://wiki.pokkt.com/api-guide/mobile-web-video-integration.md
+  version: null
+  note: >-
+    A POKKT-hosted rewarded-video surface the publisher opens for the user; custom session data
+    is passed through the URL-encoded `encodedparams` bag. The integration guide publishes the
+    endpoint over plain http://.
+
+not_found:
+- {component: web components / custom elements, probed: developer wiki, result: absent}
+- {component: React/Vue/Angular embed library, probed: 'npm registry search "pokkt", developer wiki', result: absent}
+- {component: embedded reporting dashboard, probed: developer wiki, result: absent}

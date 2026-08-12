@@ -1,0 +1,88 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/api-guide/interstitial-api.md,
+  https://wiki.pokkt.com/api-guide/gratification-api.md,
+  https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md,
+  live probe of https://api.pokkt.com/graphql
+docs: https://wiki.pokkt.com/api-guide
+note: >-
+  Derived by hand from POKKT's own documentation and one live unauthenticated probe, because
+  there is no OpenAPI to mine securitySchemes from. POKKT has no OAuth, no OIDC, no scopes and no
+  key-rotation story; identity on the public ad surface is a plain appId in the query string,
+  and the only cryptographic material anywhere is a shared app secret key used to MD5-sign the
+  rewarded-video callback back to the publisher.
+
+summary:
+  types: [apiKey, custom-hash-signature, undocumented-header]
+  api_key_in: [query, path]
+  oauth2_flows: []
+  openid_connect: false
+  mutual_tls: false
+  bearer_tokens: false
+
+schemes:
+- name: appId
+  type: apiKey
+  in: query
+  parameter: appId
+  applies_to: [ad-server-api, vast-video-api, mobile-web-video-api]
+  issued_by: POKKT dashboard ("Your unique App ID (available in POKKT dashboard)")
+  secret: false
+  note: >-
+    The appId is the caller's whole identity on the ad-serving surface. It is mandatory, it
+    travels in the URL, and there is no accompanying secret, signature or token on the request.
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- name: appId-path-segment
+  type: apiKey
+  in: path
+  parameter: '<yourappid>'
+  applies_to: [dsp-openrtb]
+  endpoint_pattern: 'https://vdo.pokkt.com/api/rtb/<yourappid>'
+  issued_by: 'account manager ("Please reach out to your account manager for App ID details")'
+  secret: false
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- name: gratification-callback-token
+  type: custom-hash-signature
+  in: query
+  parameter: token
+  algorithm: md5
+  signed_input: app_id + unique_id + timestamp + points + app secret key
+  secret_location: app settings page in the POKKT console
+  direction: POKKT -> publisher
+  applies_to: [gratification-api]
+  note: >-
+    The only shared secret POKKT documents. It authenticates POKKT's outbound reward callback to
+    the publisher's endpoint, not the publisher's calls to POKKT. MD5 over concatenated fields is
+    not an HMAC; there is no signature header, no key id, no algorithm agility and no documented
+    rotation procedure.
+  source: https://wiki.pokkt.com/api-guide/gratification-api.md
+- name: console-authorization-header
+  type: undocumented-header
+  in: header
+  parameter: Authorization
+  applies_to: [console-graphql]
+  method: probed
+  evidence: >-
+    An anonymous POST of the introspection query to https://api.pokkt.com/graphql on 2026-08-12
+    returned {"errors":[{"extensions":{"payload":{"status":401,"message":"Invalid authorization
+    header format"}}}]}. The header is therefore required; its format, issuance and lifetime are
+    not published anywhere.
+  source: https://api.pokkt.com/graphql
+
+publisher_side_credentials:
+  app_secret_key:
+    where: app settings page in the POKKT console
+    used_for: MD5 token on the rewarded-video server-side callback
+    rotation_documented: false
+  callback_url:
+    where: app settings page in the POKKT console
+    note: 'Documentation calls it a "secure rewarded server-side callback" but does not require HTTPS in the published request format.'
+
+not_found:
+- {mechanism: OAuth 2.0, probed: '/.well-known/oauth-authorization-server + /.well-known/oauth-protected-resource on 5 hosts, developer wiki', result: absent}
+- {mechanism: OpenID Connect, probed: /.well-known/openid-configuration on 5 hosts, result: absent}
+- {mechanism: scopes / permissions model, probed: developer wiki, result: absent — scopes/ deliberately not written}
+- {mechanism: mutual TLS, probed: developer wiki, result: absent}
+- {mechanism: key rotation or revocation policy, probed: developer wiki, result: absent}
+- {mechanism: public self-service key issuance, probed: pokkt.com, result: 'absent — pokkt.com root is the console login SPA; access is account-manager mediated'}

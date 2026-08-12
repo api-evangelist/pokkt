@@ -1,0 +1,26 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://pokkt.com/ (probed 200 — console SPA shell), https://pokkt.com/pricing (probed 200 —
+  same shell), https://wiki.pokkt.com/ (full 50-page llms.txt index walked)
+plan_count: 0
+currency: null
+note: >-
+  POKKT publishes no pricing of any kind — no tier table, no rate card, no revenue-share
+  percentage, no minimum spend, and no machine-readable pricing or catalog endpoint. This is not
+  a case of pricing sitting behind a "contact sales" page either: pokkt.com no longer hosts a
+  marketing site at all. The document root is the POKKT console single-page app, and every
+  marketing path returns the same 843-byte HTML shell, so there is no pricing page left to gate.
+  Commercial terms are settled through an account manager — the DSP integration guide instructs
+  integrators to "reach out to your account manager for App ID details", and the only published
+  commercial contact is monetization@pokkt.com, read from the contact_email field of
+  https://pokkt.com/sellers.json.
+access_model:
+  self_service_signup: false
+  public_trial: false
+  sales_mediated: true
+  evidence:
+  - {url: 'https://pokkt.com/', status: 200, finding: console login SPA, no public product or pricing content}
+  - {url: 'https://pokkt.com/pricing', status: 200, finding: identical SPA shell — route does not exist}
+  - {url: 'https://pokkt.com/login', status: 200, finding: login route confirmed in the console JS bundle}
+plans: []

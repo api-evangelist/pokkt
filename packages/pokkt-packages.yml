@@ -1,0 +1,122 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/downloads/native-sdk.md (POKKT developer wiki SDK downloads),
+  https://registry.npmjs.org/cordova-plugin-pokkt, https://trunk.cocoapods.org/api/v1/pods/PokktSDK
+note: >-
+  POKKT distributes its first-party client SDKs as versioned ZIP archives from its own S3
+  bucket (pokktdocumentation.s3.ap-southeast-1.amazonaws.com) rather than through language
+  package registries. There is NO POKKT artifact on Maven Central (searched, 0 results), PyPI
+  (404), RubyGems (404), crates.io or NuGet, so an Android integrator cannot pull the SDK as a
+  Gradle coordinate. Versions below are read from the pinned download URL; `published` is the
+  S3 Last-Modified header returned by an unauthenticated HEAD on that exact object.
+currency_finding: >-
+  Every first-party distribution channel is stale. The newest artifact POKKT actually serves is
+  the v8.1.0 native SDK, last written to S3 on 2021-10-27 (Android) and 2021-10-29 (iOS) — four
+  years and ten months before this probe. The npm Cordova plugin last published 2017-03-24. The
+  integration guides on the wiki describe v8.2.0, a version that has no download link on the
+  downloads page, so the documentation and the distribution disagree.
+
+registries_checked:
+- registry: npm
+  query: pokkt
+  result: 2 matches, 1 first-party
+- registry: maven-central
+  query: pokkt
+  result: 0 matches
+- registry: pypi
+  package: pokkt
+  status: 404
+- registry: rubygems
+  package: pokkt
+  status: 404
+- registry: cocoapods
+  package: PokktSDK
+  status: 200
+  result: present but ownership unclaimed on CocoaPods trunk
+
+packages:
+- language: java
+  platform: android
+  registry: s3
+  name: PokktSDK (Native Android)
+  url: https://pokktdocumentation.s3.ap-southeast-1.amazonaws.com/android/native/PokktSDK_v8.1.0_Android.zip
+  docs: https://wiki.pokkt.com/pokkt-sdk/pokkt-sdk-integration-guide-v8.2.0-android.md
+  install: download and add the AAR/JAR from the ZIP archive
+  official: true
+  version: 8.1.0
+  published: '2021-10-27'
+  note: >-
+    Version read from the pinned S3 object key; published date is the S3 Last-Modified header
+    (Wed, 27 Oct 2021 06:54:13 GMT) on an 8.3 MB archive. No Gradle/Maven coordinate exists.
+- language: objective-c
+  platform: ios
+  registry: s3
+  name: PokktSDK (Native iOS)
+  url: https://pokktdocumentation.s3.ap-southeast-1.amazonaws.com/ios/native/PokktSDK_v8.1.0_ios.zip
+  docs: https://wiki.pokkt.com/pokkt-sdk/pokkt-sdk-integration-guide-v8.2.0-ios.md
+  install: download and link the framework from the ZIP archive
+  official: true
+  version: 8.1.0
+  published: '2021-10-29'
+  note: >-
+    Published date is the S3 Last-Modified header (Fri, 29 Oct 2021 13:44:53 GMT) on a 20.8 MB
+    archive.
+- language: javascript
+  platform: cordova
+  registry: npm
+  name: cordova-plugin-pokkt
+  url: https://www.npmjs.com/package/cordova-plugin-pokkt
+  install: cordova plugin add cordova-plugin-pokkt
+  official: true
+  version: 6.0.0
+  published: '2017-03-24'
+  note: >-
+    First-party: npm author "Pokkt", sole maintainer the `pokkt` npm account. No repository or
+    homepage field is set on the package. Nine years without a release.
+- language: objective-c
+  platform: ios
+  registry: cocoapods
+  name: PokktSDK
+  url: https://cocoapods.org/pods/PokktSDK
+  official: false
+  version: 1.0.0
+  published: '2021-04-26'
+  note: >-
+    Present on CocoaPods trunk but the owner is unclaimed-pods@cocoapods.org and the single
+    published version (1.0.0) does not correspond to any POKKT release line (the native iOS SDK
+    was already at 8.x in 2021). Recorded as NOT official — do not treat this as a POKKT channel.
+- language: csharp
+  platform: unity
+  registry: s3
+  name: POKKT Unity SDK (Windows Phone build)
+  url: https://s3-ap-southeast-1.amazonaws.com/pokktdocumentation/windows/native/PokktSDK_ver3.0.0_AnyCPU_WindowsPhone8.1.zip
+  docs: https://wiki.pokkt.com/pokkt-sdk-plugins/unity3d.md
+  official: true
+  version: null
+  published: null
+  note: >-
+    The downloads page labels this link "Windows Unity SDK 4.1.1" but the object it points at is
+    PokktSDK_ver3.0.0_AnyCPU_WindowsPhone8.1.zip — the label and the artifact disagree, so no
+    version is recorded rather than guessing which is right. Not HEAD-probed.
+
+plugin_targets_documented:
+- Native Android
+- Native iOS
+- Native tvOS
+- Native Windows Phone
+- Unity3D
+- Cocos2d-x v3
+- Adobe AIR
+- Marmalade
+- Shiva3D
+- Xamarin
+- Cordova / PhoneGap
+- Corona
+- Titanium
+- Unreal Engine
+- React
+mediation_adapters_documented:
+- AdMob / Google Mobile Ads (Android + iOS, v8.2.0)
+- MoPub wrapper
+- POKKT Mediation

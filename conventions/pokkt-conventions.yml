@@ -1,0 +1,116 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/api-guide/interstitial-api.md,
+  https://wiki.pokkt.com/api-guide/vast-video-api.md,
+  https://wiki.pokkt.com/api-guide/mobile-web-video-integration.md,
+  https://wiki.pokkt.com/api-guide/gratification-api.md,
+  https://wiki.pokkt.com/api-guide/ad-interstitial.md,
+  https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+note: >-
+  Cross-cutting semantics for the POKKT public API surface, read from POKKT's own pages. This is
+  an ad-serving contract, not a resource CRUD API: everything is a single-shot GET with a wide
+  flat query string, or a single OpenRTB POST. Several conventions a general HTTP API would carry
+  simply do not exist here, and they are recorded as absent rather than left blank — in
+  particular there is NO idempotency contract of any kind, so apis.yml deliberately carries no
+  `Idempotency` pointer.
+
+request_style:
+  ad_serving: GET with flat query-string parameters; no path parameters, no request body
+  dsp: POST application/json (OpenRTB bid request object) to a per-app path segment
+  console: POST application/json to a single GraphQL endpoint
+  parameter_case: mixed — camelCase (appId, appName, advertisingID, limitedTracking, categoryIab, cacheBreaker) and snake_case (ad_format, response_format, device_id, app_bundle_name, app_storeurl, gdpr_consent) appear side by side in the same query string
+  encoding: values are URL-encoded; app name and store URL are explicitly documented as URL-encoded
+
+authentication:
+  style: >-
+    Application identity by appId query parameter (issued in the POKKT dashboard); no bearer
+    token, no signed request, no key rotation documented. See authentication/pokkt-authentication.yml.
+
+content_negotiation:
+  mechanism: response_format query parameter, not the Accept header
+  values:
+  - {value: '0', returns: JSON ad response}
+  - {value: '1', returns: VAST XML video tag}
+  - {value: '2', returns: HTML markup}
+  extra_response_header: >-
+    Creative-Format — returned only when HTML markup is requested; carries NON_MRAID, MRAID1 or
+    MRAID2 so the caller knows how to host the creative.
+
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    No Idempotency-Key, no request-id echo, no dedupe token, and no retry guidance appears on any
+    published page. The opposite convention is documented: a mandatory-in-practice cacheBreaker /
+    _cb "cache buster" parameter whose whole purpose is to make each otherwise-identical request
+    unique. The rewarded-video S2S callback has no delivery guarantee, no retry policy and no
+    replay window beyond a timestamp parameter, so a publisher must build its own dedupe on
+    (app_id, unique_id, timestamp).
+
+pagination:
+  supported: false
+  note: Ad responses return one or more ad objects in a single array; there is no paging surface.
+
+versioning:
+  api_versioning: none — no version path segment, no version header, no version query parameter on any ad-serving endpoint
+  protocol_versioning: 'x-openrtb-version request header on DSP bid requests (OpenRTB 2.5 / 2.6)'
+  sdk_versioning: semantic, on the client SDK only (latest published build 8.1.0, integration guides describe 8.2.0)
+  note: >-
+    Because the wire API is unversioned, a breaking change to the AdServer query contract has no
+    signalling mechanism at all.
+
+error_envelope:
+  shape: '{status, message, others, vc}'
+  status_in_body: true
+  http_status_meaningful: false
+  note: >-
+    Failures on the ad-serving surface are returned with HTTP 200 and status "0" in the body. The
+    full catalog is in errors/pokkt-error-responses.yml.
+
+rate_limit_signaling:
+  documented: false
+  headers: []
+  note: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header is documented, and no quota is published.
+    See rate-limits/pokkt-rate-limits.yml.
+
+tracing:
+  request_id_header: null
+  documented: false
+  correlation: >-
+    The nearest thing to a correlation identifier is track_id / offer_id on the returned
+    impression and click tracker URLs (vdo.pokkt.com/api/vt), which the caller fires rather than
+    reads.
+
+privacy_and_consent:
+  mandatory_signals: [limitedTracking (DNT), u13 (under-13), categoryIab]
+  optional_signals: [gdpr_applicable, gdpr_consent, dnt, age, gender, latitude, longitude]
+  identifier_hashing: 'MD5 and SHA1 variants accepted for both IDFA and Android advertising ID (idfa_md5, idfa_sha1, aid_md5, aid_sha1)'
+  note: >-
+    The request contract carries personal and device data — advertising ID, IP address, user
+    agent, coarse location, age, gender, and an optional email_address parameter — so consent
+    handling is the integrator's responsibility. POKKT points at its privacy policy in the API
+    FAQ.
+
+regional_routing:
+  pattern: hostname prefix, chosen by the integrator
+  dsp_endpoints:
+  - {region: global, url: 'https://vdo.pokkt.com/api/rtb/<appid>', recommended: true}
+  - {region: apac, url: 'https://sg-vdo.pokkt.com/api/rtb/<appid>'}
+  - {region: us, url: 'https://us-vdo.pokkt.com/api/rtb/<appid>'}
+
+constraints_documented:
+- One impression object per OpenRTB bid request; multiple impression objects are not supported.
+- Audio, Native, Deal and PMP bid-request objects are not supported.
+- VPAID is not supported.
+- 'Ad formats are limited to full-screen interstitials at 16:9 or 5:4 (and reverses); standard banners such as 300x50 are explicitly not supported.'
+- XML output is not offered for non-video display ads; video responses are VAST XML.
+
+cross_links:
+  authentication: authentication/pokkt-authentication.yml
+  errors: errors/pokkt-error-responses.yml
+  lifecycle: lifecycle/pokkt-lifecycle.yml
+  rate_limits: rate-limits/pokkt-rate-limits.yml
+  webhooks: asyncapi/pokkt-webhooks.yml
+  conformance: conformance/pokkt-conformance.yml

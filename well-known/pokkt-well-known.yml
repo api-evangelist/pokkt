@@ -1,0 +1,89 @@
+generated: '2026-08-12'
+method: probed
+source: live unauthenticated GET of the /.well-known/ surface on every POKKT host in apis.yml
+result: no-hit
+note: >-
+  Every /.well-known/ path was probed on all five live POKKT hosts and NOT ONE returned a real
+  document, so NO WellKnown and NO SecurityTxt pointer is emitted in apis.yml. Three distinct
+  failure shapes were observed and are recorded verbatim below because they are different facts:
+  pokkt.com and dashboard.pokkt.com are single-page apps whose catch-all answers HTTP 200 with
+  the same ~840-byte / ~470-byte HTML shell for every path (a 200 that is not a document — this
+  is the classic false positive and it is scored as a MISS here); api.pokkt.com is a Spring
+  reactive gateway that converts an unrouted path into HTTP 500 carrying a GraphQL-shaped error
+  envelope; vdo.pokkt.com and wiki.pokkt.com return honest 404s.
+  POKKT does publish one machine-readable transparency document at a fixed root path — an IAB
+  Tech Lab sellers.json — but it is not a /.well-known/ resource, so it is captured under
+  conformance/ instead of being credited here.
+
+hosts:
+- host: pokkt.com
+  behavior: spa-catch-all
+  documents:
+  - {path: /.well-known/security.txt, status: 200, document: false, note: HTML SPA shell, 843 bytes}
+  - {path: /.well-known/openid-configuration, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/oauth-authorization-server, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/oauth-protected-resource, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/api-catalog, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/ai-plugin.json, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/agent-card.json, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/agent.json, status: 200, document: false, note: HTML SPA shell}
+  - {path: /app-ads.txt, status: 200, document: false, note: HTML SPA shell, not an ads.txt file}
+  - {path: /ads.txt, status: 200, document: false, note: HTML SPA shell, not an ads.txt file}
+  - {path: /sellers.json, status: 200, document: true, note: real IAB sellers.json 1.0 — captured at conformance/pokkt-sellers.json}
+- host: api.pokkt.com
+  behavior: gateway-500-on-unrouted-path
+  documents:
+  - {path: /.well-known/security.txt, status: 500, document: false}
+  - {path: /.well-known/openid-configuration, status: 500, document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 500, document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 500, document: false}
+  - {path: /.well-known/api-catalog, status: 500, document: false}
+  - {path: /.well-known/ai-plugin.json, status: 500, document: false}
+  - {path: /.well-known/agent-card.json, status: 500, document: false}
+  - {path: /.well-known/agent.json, status: 500, document: false}
+- host: vdo.pokkt.com
+  behavior: honest-404
+  documents:
+  - {path: /.well-known/security.txt, status: 404, document: false}
+  - {path: /.well-known/openid-configuration, status: 404, document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 404, document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 404, document: false}
+  - {path: /.well-known/api-catalog, status: 404, document: false}
+  - {path: /.well-known/ai-plugin.json, status: 404, document: false}
+  - {path: /.well-known/agent-card.json, status: 404, document: false}
+  - {path: /.well-known/agent.json, status: 404, document: false}
+- host: wiki.pokkt.com
+  behavior: honest-404
+  documents:
+  - {path: /.well-known/security.txt, status: 404, document: false}
+  - {path: /.well-known/openid-configuration, status: 404, document: false}
+  - {path: /.well-known/oauth-authorization-server, status: 404, document: false}
+  - {path: /.well-known/oauth-protected-resource, status: 404, document: false}
+  - {path: /.well-known/api-catalog, status: 404, document: false}
+  - {path: /.well-known/ai-plugin.json, status: 404, document: false}
+  - {path: /.well-known/agent-card.json, status: 404, document: false}
+  - {path: /.well-known/agent.json, status: 404, document: false}
+  - {path: /llms.txt, status: 200, document: true, note: real llms.txt — captured at llms/pokkt-llms.txt}
+  - {path: /llms-full.txt, status: 200, document: true, note: 629 KB verbatim docs dump; deliberately NOT committed (gitignored)}
+  - {path: /robots.txt, status: 200, document: true, note: 'carries a Content-Signal header line: ai-train=yes, search=yes, ai-input=yes'}
+  - {path: /sitemap.xml, status: 200, document: true}
+- host: dashboard.pokkt.com
+  behavior: spa-catch-all
+  documents:
+  - {path: /.well-known/security.txt, status: 200, document: false, note: HTML SPA shell, 467 bytes}
+  - {path: /.well-known/openid-configuration, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/oauth-authorization-server, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/oauth-protected-resource, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/api-catalog, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/ai-plugin.json, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/agent-card.json, status: 200, document: false, note: HTML SPA shell}
+  - {path: /.well-known/agent.json, status: 200, document: false, note: HTML SPA shell}
+
+agent_card:
+  found: false
+  paths_probed: ['/.well-known/agent-card.json', '/.well-known/agent.json']
+  hosts_probed: [pokkt.com, api.pokkt.com, vdo.pokkt.com, wiki.pokkt.com, dashboard.pokkt.com]
+  note: >-
+    No A2A agent card exists. The 200s on pokkt.com and dashboard.pokkt.com are SPA catch-all
+    HTML, not JSON objects, and are rejected. Per the pipeline contract nothing was written to
+    a2a/ — an agent card is the one artifact that must never be authored on a provider's behalf.

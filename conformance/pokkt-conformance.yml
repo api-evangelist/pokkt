@@ -1,0 +1,177 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md,
+  https://wiki.pokkt.com/api-guide/interstitial-api.md,
+  https://wiki.pokkt.com/api-guide/vast-video-api.md,
+  https://pokkt.com/sellers.json (probed 200, saved verbatim to conformance/pokkt-sellers.json)
+note: >-
+  POKKT's conformance story is entirely IAB/ad-tech, not general web-API. It implements the
+  programmatic advertising standards well and publishes the transparency documents those
+  standards require, while implementing none of the modern HTTP-API conventions (no OpenAPI, no
+  OAuth, no RFC 9457 problem details, no RFC 8594 sunset headers). Each entry below cites the
+  page or probed document it came from; entries marked conforms:false were checked and found
+  absent, not assumed.
+
+standards:
+- id: openrtb-2.5
+  name: IAB OpenRTB 2.5
+  conforms: true
+  evidence: >-
+    "POKKT supports the following OpenRTB versions: 2.5, 2.6" — POKKT DSP integration guide.
+    Bid requests are HTTP POST application/json to https://vdo.pokkt.com/api/rtb/<appid>.
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- id: openrtb-2.6
+  name: IAB OpenRTB 2.6
+  conforms: true
+  evidence: Listed alongside 2.5 in the DSP integration guide, linking the IAB Tech Lab 2.6 PDF.
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- id: openrtb-version-header
+  name: x-openrtb-version request header
+  conforms: true
+  evidence: >-
+    "All OpenRTB calls to POKKT DSP will have 'x-openrtb-version' header mentioning protocol
+    version as per OpenRTB specifications."
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- id: openrtb-nobid-204
+  name: OpenRTB no-bid signalling (HTTP 204)
+  conforms: true
+  evidence: >-
+    "The corresponding response is either an HTTP 204 with no body for a no-bid, or an HTTP 200
+    with a json body of a bid response."
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- id: openrtb-supplychain
+  name: OpenRTB SupplyChain object (sChain)
+  conforms: true
+  evidence: >-
+    The Ad Server API accepts a p_sco (Supply_Chain_Obj) query parameter, and the DSP guide names
+    "Supply Chain and nodes" among the recommended bid-request objects.
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- id: iab-sellers-json-1.0
+  name: IAB Tech Lab sellers.json 1.0
+  conforms: true
+  evidence: >-
+    https://pokkt.com/sellers.json returns HTTP 200 application/json, version "1.0", 310 seller
+    records, contact_email monetization@pokkt.com, identifiers [{name: TAG-ID, value:
+    c45702d9311e25fd}]. Saved verbatim to conformance/pokkt-sellers.json.
+  source: https://pokkt.com/sellers.json
+- id: iab-ads-txt
+  name: IAB ads.txt / app-ads.txt (as a publisher)
+  conforms: false
+  evidence: >-
+    https://pokkt.com/ads.txt and https://pokkt.com/app-ads.txt both return HTTP 200 but serve
+    the 843-byte console single-page-app HTML shell, not an ads.txt record set. POKKT appears as
+    a RESELLER/DIRECT line inside third-party app-ads.txt files (seller id pokkt.com, TAG-ID
+    c45702d9311e25fd) but does not itself serve one. sellers.json is the document it does serve.
+  source: https://pokkt.com/app-ads.txt
+- id: vast-2.0
+  name: IAB VAST 2.0
+  conforms: true
+  evidence: >-
+    "For video ads, the bid response will follow the VAST 2.0 format within the adm attribute."
+    The Vast Video API returns a VAST tag for response_format=1.
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- id: mraid-1-2
+  name: IAB MRAID 1 / MRAID 2
+  conforms: true
+  evidence: >-
+    creative_format in the Ad Server JSON response is one of NON_MRAID, MRAID1 or MRAID2; the
+    same value is returned as a Creative-Format response header when HTML markup is requested.
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- id: vpaid
+  name: IAB VPAID
+  conforms: false
+  evidence: '"VPAID is not supported" — POKKT DSP integration guide.'
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- id: openrtb-native
+  name: OpenRTB Native ad object
+  conforms: false
+  evidence: >-
+    "The following bid request objects are not supported by POKKT: Audio, Native, Deal, PMP."
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- id: iab-content-taxonomy
+  name: IAB Content Taxonomy category codes
+  conforms: true
+  evidence: 'Ad Server API mandatory parameter categoryIab — "IAB Category Code (e.g. IAB1, IAB31 etc.)".'
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- id: gdpr-tcf-consent
+  name: GDPR consent signalling (gdpr_applicable / gdpr_consent)
+  conforms: true
+  evidence: >-
+    Both the Ad Server API and the Vast Video API take gdpr_applicable and gdpr_consent query
+    parameters, and a limitedTracking (DNT) parameter is mandatory.
+  source: https://wiki.pokkt.com/api-guide/vast-video-api.md
+- id: coppa-under-13
+  name: Under-13 / child-directed signalling
+  conforms: true
+  evidence: 'Mandatory u13 parameter — "App targeted to children under 13 years (1 for Yes, 0 for No)".'
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- id: openapi
+  name: OpenAPI / Swagger
+  conforms: false
+  evidence: >-
+    No OpenAPI anywhere. Probed /openapi.json, /openapi.yaml, /swagger.json, /v2/api-docs,
+    /v3/api-docs, /api-docs, /swagger-ui.html, /docs and /redoc on api.pokkt.com (all HTTP 500
+    from the gateway), the same set on pokkt.com (200 SPA shell) and wiki.pokkt.com (404), and
+    walked all 50 pages in the published llms.txt index. The API reference is prose plus example
+    query strings.
+  source: https://api.pokkt.com/v3/api-docs
+- id: graphql
+  name: GraphQL
+  conforms: true
+  evidence: >-
+    A GraphQL endpoint is live at https://api.pokkt.com/graphql behind the POKKT console. GET
+    returns 405; an anonymous introspection POST returns
+    {"errors":[{"extensions":{"payload":{"status":401,"message":"Invalid authorization header
+    format"}}}]}. Introspection is auth-gated, so no SDL was captured and none was invented.
+  source: https://api.pokkt.com/graphql
+- id: rfc9457-problem-details
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: >-
+    Ad Server errors are a bespoke JSON envelope {status, message, others, vc}; console errors
+    are a GraphQL errors[] array carrying a nested payload object. Neither uses
+    application/problem+json.
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence: >-
+    No OAuth anywhere. /.well-known/oauth-authorization-server and
+    /.well-known/oauth-protected-resource miss on all five hosts. Authentication is an appId
+    query parameter plus a shared app secret key used to MD5-sign reward callbacks.
+  source: well-known/pokkt-well-known.yml
+- id: rfc8594-sunset-header
+  name: RFC 8594 Sunset header
+  conforms: false
+  evidence: No deprecation or sunset policy is published; see lifecycle/pokkt-lifecycle.yml.
+  source: lifecycle/pokkt-lifecycle.yml
+- id: rfc9116-security-txt
+  name: RFC 9116 security.txt
+  conforms: false
+  evidence: /.well-known/security.txt misses on all five hosts (200 SPA shell, 500, or 404).
+  source: well-known/pokkt-well-known.yml
+- id: llms-txt
+  name: llms.txt
+  conforms: true
+  evidence: >-
+    https://wiki.pokkt.com/llms.txt returns HTTP 200 with a real 4 KB index of 50 documentation
+    pages, and every page is available as Markdown by appending .md. Served by the GitBook
+    platform the wiki runs on. Captured verbatim at llms/pokkt-llms.txt.
+  source: https://wiki.pokkt.com/llms.txt
+- id: content-signals
+  name: Content Signals policy in robots.txt
+  conforms: true
+  evidence: >-
+    https://wiki.pokkt.com/robots.txt carries "Content-Signal: ai-train=yes, search=yes,
+    ai-input=yes" — an explicit, permissive AI-use declaration on the documentation host.
+  source: https://wiki.pokkt.com/robots.txt
+
+certifications:
+  note: >-
+    No trust center, no security certification page, and no SOC 2 / ISO 27001 / PCI claim was
+    found on any POKKT host or on the AnyMind Group parent site, so apis.yml carries NO
+    `Compliance` and NO `TrustCenter` pointer. The one third-party status found is an
+    advertising-industry accreditation, recorded here for completeness only.
+  found:
+  - {name: TAG-ID, value: c45702d9311e25fd, issuer: Trustworthy Accountability Group, evidence: 'identifiers[] block of https://pokkt.com/sellers.json'}

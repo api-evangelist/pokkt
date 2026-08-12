@@ -1,0 +1,95 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/api-guide/interstitial-api.md,
+  https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md,
+  live probe of https://api.pokkt.com/graphql and https://api.pokkt.com/
+format: bespoke
+note: >-
+  POKKT publishes no error-code registry and no problem-type catalog. There are three distinct
+  and mutually incompatible error shapes across its surfaces, captured below exactly as
+  documented or as observed on an unauthenticated probe. An empty JSON array is a SUCCESSFUL
+  no-fill on the Ad Server API, not an error — that distinction is the one an integrator most
+  often gets wrong, so it is recorded explicitly.
+
+envelopes:
+- surface: ad-server-api
+  host: vdo.pokkt.com
+  shape: '{status, message, others, vc}'
+  content_type: application/json
+  documented: true
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- surface: dsp-openrtb
+  host: vdo.pokkt.com
+  shape: no body; status code carries the outcome
+  documented: true
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- surface: console-graphql
+  host: api.pokkt.com
+  shape: '{errors: [{extensions: {payload: {status, message, description}}}]}'
+  content_type: application/json
+  documented: false
+  observed: true
+  source: probed https://api.pokkt.com/graphql 2026-08-12
+
+problems:
+- surface: ad-server-api
+  status: 200
+  body: '[]'
+  title: No fill
+  meaning: >-
+    "The POKKT ad server responds with a blank JSON array for cases where there is no ad to
+    fill." This is a normal outcome, not a failure.
+  remediation: >-
+    Treat an empty array as no-ad-available and fall through to the next demand source. Do not
+    retry the same request.
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- surface: ad-server-api
+  status: 200
+  body: '{"status":"0","message":"invalid package\/key","others":[],"vc":"0"}'
+  title: Invalid or incomplete parameters
+  meaning: >-
+    "The server will respond with a JSON error string in case the app ID isn't valid or if it
+    comes across different issues." The published example carries status "0" and message
+    "invalid package/key".
+  remediation: >-
+    Check appId against the value in the POKKT dashboard and confirm every mandatory parameter
+    is present (appId, appName, ad_format, response_format, advertisingID, ip, ua,
+    limitedTracking, category, app_bundle_name, u13, app_storeurl, categoryIab).
+  note: >-
+    The failure is signalled in the body, not the HTTP status line — a client that switches on
+    the status code alone will read this as success.
+  source: https://wiki.pokkt.com/api-guide/interstitial-api.md
+- surface: dsp-openrtb
+  status: 204
+  title: No bid
+  meaning: 'HTTP 204 with no body is the documented no-bid response.'
+  remediation: Continue the auction; no error handling required.
+  source: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp.md
+- surface: console-graphql
+  status: 401
+  observed_body: '{"errors":[{"extensions":{"payload":{"status":401,"message":"Invalid authorization header format","description":null}}}]}'
+  title: Invalid authorization header format
+  meaning: >-
+    Returned by https://api.pokkt.com/graphql to an anonymous POST. The console API requires a
+    correctly formatted authorization header; the format itself is undocumented publicly.
+  remediation: Authenticate through the POKKT console; no public credential issuance is documented.
+  method: probed
+  source: https://api.pokkt.com/graphql
+- surface: console-graphql
+  status: 500
+  title: Unrouted path surfaced as 500
+  meaning: >-
+    Any unrouted path on api.pokkt.com returns HTTP 500 with a GraphQL-shaped envelope whose
+    payload reads "An unexpected error occurred: 404 NOT_FOUND". A not-found condition is
+    therefore reported to callers as a server error.
+  remediation: >-
+    Provider-side: map the underlying 404 to a 404 status. Client-side: do not treat 500 from
+    this host as retryable without inspecting the payload message.
+  method: probed
+  source: https://api.pokkt.com/
+
+not_found:
+- {artifact: error code registry, probed: 'developer wiki (50 pages via llms.txt)', result: absent}
+- {artifact: RFC 9457 problem types, probed: all documented surfaces, result: absent}
+- {artifact: decline codes, applicable: false, reason: not a payments or card-authorization provider}

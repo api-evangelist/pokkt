@@ -1,0 +1,68 @@
+generated: '2026-08-12'
+method: searched
+source: https://wiki.pokkt.com/api-guide/gratification-api.md
+spec_type: none
+note: >-
+  POKKT publishes NO AsyncAPI document and no event-catalog page — searched the developer wiki
+  (llms.txt index of 50 pages), the AnyMindGroup GitHub org, and /asyncapi.yaml on every host,
+  all misses. It does document exactly one server-to-server outbound callback — the Gratification
+  API rewarded-video confirmation — so this file captures that webhook catalog and apis.yml
+  carries a `Webhooks` pointer, not an `AsyncAPI` one. Nothing here is inferred: every parameter
+  and the token construction below is copied from POKKT's own page, which is dated 22 June 2017.
+
+webhooks:
+- name: rewarded-video-gratification-callback
+  summary: >-
+    Fired by POKKT to a publisher-hosted URL as soon as a user completes a rewarded video, so the
+    publisher can confirm (not grant) the reward server-side.
+  direction: outbound
+  transport: http
+  method: GET
+  delivery: asynchronous
+  endpoint_owner: publisher
+  endpoint_configuration: >-
+    "PUBLISHER LINK URL" is set by the developer on the app settings page in the POKKT console.
+  docs: https://wiki.pokkt.com/api-guide/gratification-api.md
+  request_shape: >-
+    [PUBLISHER LINK URL]?app_id=[APP_ID]&unique_id=...&timestamp=...&token=...&points=...&network_id=...
+  parameters:
+  - {name: app_id, in: query, required: true, description: The app id of the application, found on the app settings page.}
+  - {name: unique_id, in: query, required: true, description: Publisher-set user identifier; must be set in the POKKT SDK by the publisher.}
+  - {name: points, in: query, required: false, type: float, description: Amount of reward granted to the user. Defaults to 0 when absent.}
+  - {name: timestamp, in: query, required: true, description: Current timestamp in milliseconds.}
+  - {name: token, in: query, required: true, description: Authentication token for the callback (see verification below).}
+  - {name: encodedPubParams, in: query, required: false, description: Custom data set from the SDK when showing the rewarded video, e.g. the level name.}
+  - {name: network_id, in: query, required: false, description: Mediation network id from the mediation settings page. Null when the rewarded ad came from the POKKT network itself.}
+  verification:
+    scheme: shared-secret-hash
+    algorithm: md5
+    input: concatenation of app_id, unique_id, timestamp, points and the app secret key
+    secret_location: app settings page in the POKKT console
+    signature_parameter: token
+    note: >-
+      MD5 over a concatenated string is the published scheme. It is not an HMAC and there is no
+      documented replay window beyond the timestamp parameter, no signature header, and no
+      documented retry or delivery-guarantee policy.
+  reliability:
+    retries_documented: false
+    ordering_documented: false
+    idempotency_documented: false
+    ip_allowlist_documented: false
+  usage_rule_from_docs: >-
+    "This callback is called asynchronously, and should not be used to give rewards. Client-side
+    callbacks should be used to give rewards, and use the server-side callbacks to confirm the
+    reward."
+
+tracking_endpoints:
+  note: >-
+    Not webhooks — these are POKKT-hosted tracker URLs returned INSIDE an ad response that the
+    integrating partner must fire. Recorded here because they are the only other event-shaped
+    surface POKKT documents.
+  endpoints:
+  - {name: impression_urls, host: vdo.pokkt.com, path: /api/vt, fired_when: image/interstitial ad is loaded and visible, source: https://wiki.pokkt.com/api-guide/interstitial-api.md}
+  - {name: click_urls, host: vdo.pokkt.com, path: /api/vt, fired_when: user clicks the ad, source: https://wiki.pokkt.com/api-guide/interstitial-api.md}
+
+not_found:
+- {surface: AsyncAPI document, probed: 'wiki.pokkt.com llms.txt index (50 pages), GitHub AnyMindGroup org', result: absent}
+- {surface: event catalog / streaming API, probed: developer wiki, result: absent}
+- {surface: reporting webhook, probed: developer wiki, result: absent}

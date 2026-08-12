@@ -1,0 +1,112 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  https://wiki.pokkt.com/ (developer wiki, page "Last Update" stamps),
+  https://wiki.pokkt.com/downloads/native-sdk.md, S3 Last-Modified headers on the published SDK
+  archives, and live probes of pokkt.com, blog.pokkt.com and pokktjs.pokkt.com
+note: >-
+  POKKT publishes no versioning policy, no deprecation policy, no SLA and no status page, so
+  apis.yml carries NO StatusPage and NO Deprecation pointer — the artifact records their absence
+  rather than asserting a posture the provider does not have. What the surface does carry is
+  dated evidence of decay, collected below, because publication dates are the only lifecycle
+  signal POKKT actually emits.
+
+versioning:
+  scheme: none
+  wire_api_version: null
+  note: >-
+    No version path segment, header or parameter on any ad-serving endpoint. The only versioned
+    things are the client SDK (semver) and the OpenRTB protocol (x-openrtb-version header).
+  docs: https://wiki.pokkt.com/api-guide
+
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No deprecation policy, no notice period, no RFC 8594 Sunset/Deprecation header support and no
+    migration guide. One in-place deprecation is visible only as strikethrough text inside a
+    parameter table: the connType value "1-Ethernet" is struck out in the Ad Server API
+    documentation with no accompanying note.
+
+sla:
+  url: null
+  uptime_target: null
+  published: false
+
+status_page:
+  url: null
+  found: false
+  probed: [status.pokkt.com, https://pokkt.com, https://wiki.pokkt.com]
+  note: 'status.pokkt.com does not resolve (NXDOMAIN); no status or uptime page is linked from any documentation page.'
+
+support:
+  self_service: false
+  note: >-
+    Access to the DSP and the Ad Server API is mediated by an account manager ("Please reach out
+    to your account manager for App ID details"). The published contact address is
+    monetization@pokkt.com, read from the contact_email field of https://pokkt.com/sellers.json.
+    The documentation site's only feedback channel is a GitHub issue template on
+    github.com/AnyMindGroup/pokkt-gitbook-user-manual.
+
+documentation_currency:
+  wiki_last_update_banner: '2024-09-09'
+  pages:
+  - {page: /api-guide/interstitial-api, last_update: '2021-05-20'}
+  - {page: /api-guide/vast-video-api, last_update: '2021-05-20'}
+  - {page: /downloads/native-sdk, last_update: '2021-10-27'}
+  - {page: /api-guide/gratification-api, last_update: '2017-06-22'}
+  - {page: /api-guide/ad-interstitial, last_update: '2016-12-27'}
+  - {page: /dsp-integration-guide/pokkt-dsp, last_update: '2024-09-09'}
+  note: >-
+    The DSP integration guide is the only recently maintained page. The rewarded-callback
+    contract every publisher depends on has not been touched since 2017.
+
+sdk_currency:
+  latest_published_build: 8.1.0
+  latest_published_date: '2021-10-29'
+  documented_version: 8.2.0
+  evidence:
+  - {artifact: PokktSDK_v8.1.0_Android.zip, last_modified: '2021-10-27', method: probed, source: 'HEAD https://pokktdocumentation.s3.ap-southeast-1.amazonaws.com/android/native/PokktSDK_v8.1.0_Android.zip'}
+  - {artifact: PokktSDK_v8.1.0_ios.zip, last_modified: '2021-10-29', method: probed, source: 'HEAD https://pokktdocumentation.s3.ap-southeast-1.amazonaws.com/ios/native/PokktSDK_v8.1.0_ios.zip'}
+  - {artifact: cordova-plugin-pokkt, published: '2017-03-24', version: 6.0.0, source: https://registry.npmjs.org/cordova-plugin-pokkt}
+  finding: >-
+    The integration guides describe SDK v8.2.0 for Android and iOS, but v8.2.0 has no download
+    link anywhere on the downloads page — the newest object POKKT actually serves is v8.1.0 from
+    October 2021. Documentation and distribution disagree, and an integrator following the
+    current guide cannot obtain the version it describes.
+
+decay_observed:
+- host: pokktjs.pokkt.com
+  finding: expired TLS certificate
+  evidence: >-
+    GET https://pokktjs.pokkt.com/interstitial/pokkt.js fails TLS verification with
+    "certificate has expired" (curl exit 60). The file is served fine over plain HTTP and over
+    HTTPS with verification disabled (200, 5,429 bytes), so the script is live but unloadable by
+    any modern browser from an HTTPS page — this is the loader the Ad Tag integration guide tells
+    publishers to embed.
+  method: probed
+  date: '2026-08-12'
+- host: blog.pokkt.com
+  finding: unreachable
+  evidence: 'DNS resolves to an EC2 host in ap-southeast-1 but TCP connections time out (curl exit 28, 25s).'
+  method: probed
+  date: '2026-08-12'
+- host: pokkt.com
+  finding: marketing site replaced by the console
+  evidence: >-
+    The document root now serves the POKKT console single-page app (title "POKKT | Monetization |
+    Advertising | Remarketing | Video", routes /login, /logout, /graphql, /not-found), sharing
+    its stylesheet bundle with console-alpha.pokkt.com. Every marketing path — /privacy,
+    /careers, /pricing — returns the same 843-byte shell, so the public product, pricing and
+    legal pages the documentation links to no longer exist.
+  method: probed
+  date: '2026-08-12'
+- host: api.pokkt.com
+  finding: not-found surfaced as HTTP 500
+  evidence: 'Any unrouted path returns 500 with payload "An unexpected error occurred: 404 NOT_FOUND".'
+  method: probed
+  date: '2026-08-12'
+
+deprecated_operations: []

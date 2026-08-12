@@ -42,6 +42,13 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Pokkt is a company surfaced as a portfolio company of 500-global and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Pokkt is a mobile advertising and app-monetization platform, part of AnyMind Group, surfaced as a
+portfolio company of 500-global. Its public API surface is documented on the POKKT developer wiki at
+https://wiki.pokkt.com — a supply-side Ad Server API and VAST Video API at `vdo.pokkt.com`, a hosted
+mobile-web rewarded-video surface, a server-to-server rewarded-video gratification callback, and a
+demand-side OpenRTB 2.5/2.6 bid endpoint with global, APAC and US hosts. Pokkt publishes an
+`llms.txt` index of its documentation and an IAB Tech Lab `sellers.json`, but no OpenAPI, no OAuth
+and no public pricing; the console GraphQL API at `api.pokkt.com/graphql` is authentication-gated,
+and the first-party client SDKs have not been republished since October 2021.
 
 Backed by: 500-global — https://pokkt.com
