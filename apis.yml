@@ -51,6 +51,22 @@ tags:
 - Ad Serving
 - Connected TV
 - Supply Side Platform
+- Demand-Side Platform
+tags_raw:
+- Company
+- Advertising
+- Monetization
+- Mobile
+- Video Advertising
+- AdTech
+- Remarketing
+- OpenRTB
+- Programmatic Advertising
+- Rewarded Video
+- Mobile SDK
+- Ad Serving
+- Connected TV
+- Supply Side Platform
 - Demand Side Platform
 apis:
 - aid: pokkt:ad-server-api
@@ -66,6 +82,12 @@ apis:
   humanURL: https://wiki.pokkt.com/api-guide/interstitial-api
   baseURL: https://vdo.pokkt.com
   tags:
+  - Ad Serving
+  - Interstitial
+  - Banner
+  - mraid
+  - Mobile Advertising
+  tags_raw:
   - ad-serving
   - interstitial
   - banner
@@ -90,6 +112,11 @@ apis:
   humanURL: https://wiki.pokkt.com/api-guide/vast-video-api
   baseURL: https://vdo.pokkt.com
   tags:
+  - Video Advertising
+  - VAST
+  - Rewarded Video
+  - SSP
+  tags_raw:
   - video-advertising
   - vast
   - rewarded-video
@@ -114,6 +141,11 @@ apis:
   humanURL: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp
   baseURL: https://vdo.pokkt.com
   tags:
+  - OpenRTB
+  - Real-Time Bidding
+  - DSP
+  - Programmatic
+  tags_raw:
   - openrtb
   - real-time-bidding
   - dsp
@@ -137,6 +169,10 @@ apis:
   humanURL: https://wiki.pokkt.com/api-guide/mobile-web-video-integration
   baseURL: https://vdo.pokkt.com
   tags:
+  - Mobile Web
+  - Rewarded Video
+  - hosted-surface
+  tags_raw:
   - mobile-web
   - rewarded-video
   - hosted-surface
@@ -161,6 +197,11 @@ apis:
     and registered on the app settings page in the POKKT console ("[PUBLISHER LINK URL]" in
     POKKT's own request format), so POKKT publishes no base host of its own for it.
   tags:
+  - Webhook
+  - Server-to-Server
+  - Rewarded Video
+  - Callbacks
+  tags_raw:
   - webhooks
   - server-to-server
   - rewarded-video
@@ -183,6 +224,11 @@ apis:
   humanURL: https://pokkt.com/login
   baseURL: https://api.pokkt.com
   tags:
+  - GraphQL
+  - Console
+  - Campaign Management
+  - Gated
+  tags_raw:
   - graphql
   - console
   - campaign-management
