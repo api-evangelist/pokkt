@@ -93,11 +93,11 @@ apis:
   humanURL: https://wiki.pokkt.com/api-guide/interstitial-api
   baseURL: https://vdo.pokkt.com
   tags:
-  - Ad Serving
-  - Interstitial
-  - Banner
+  - ad-serving
+  - interstitial
+  - banner
   - mraid
-  - Mobile Advertising
+  - mobile-advertising
   tags_raw:
   - ad-serving
   - interstitial
@@ -123,10 +123,10 @@ apis:
   humanURL: https://wiki.pokkt.com/api-guide/vast-video-api
   baseURL: https://vdo.pokkt.com
   tags:
-  - Video Advertising
-  - VAST
-  - Rewarded Video
-  - SSP
+  - video-advertising
+  - vast
+  - rewarded-video
+  - ssp
   tags_raw:
   - video-advertising
   - vast
@@ -152,9 +152,9 @@ apis:
   humanURL: https://wiki.pokkt.com/dsp-integration-guide/pokkt-dsp
   baseURL: https://vdo.pokkt.com
   tags:
-  - OpenRTB
-  - Real-Time Bidding
-  - DSP
+  - openrtb
+  - real-time-bidding
+  - dsp
   - Programmatic
   tags_raw:
   - openrtb
@@ -180,8 +180,8 @@ apis:
   humanURL: https://wiki.pokkt.com/api-guide/mobile-web-video-integration
   baseURL: https://vdo.pokkt.com
   tags:
-  - Mobile Web
-  - Rewarded Video
+  - mobile-web
+  - rewarded-video
   - hosted-surface
   tags_raw:
   - mobile-web
@@ -209,9 +209,9 @@ apis:
     POKKT's own request format), so POKKT publishes no base host of its own for it.
   tags:
   - Webhook
-  - Server-to-Server
-  - Rewarded Video
-  - Callbacks
+  - server-to-server
+  - rewarded-video
+  - callbacks
   tags_raw:
   - webhooks
   - server-to-server
@@ -235,10 +235,10 @@ apis:
   humanURL: https://pokkt.com/login
   baseURL: https://api.pokkt.com
   tags:
-  - GraphQL
+  - graphql
   - Console
-  - Campaign Management
-  - Gated
+  - campaign-management
+  - gated
   tags_raw:
   - graphql
   - console
