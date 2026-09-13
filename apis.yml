@@ -62,7 +62,7 @@ tags:
 - Ad Serving
 - Connected TV
 - Supply Side Platform
-- Demand-Side Platform
+- DSP
 tags_raw:
 - Company
 - Advertising
@@ -126,7 +126,7 @@ apis:
   - Video Advertising
   - VAST
   - Rewarded Video
-  - SSP
+  - Supply Side Platform
   tags_raw:
   - video-advertising
   - vast
