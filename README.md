@@ -64,13 +64,112 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Pokkt is a mobile advertising and app-monetization platform, part of AnyMind Group, surfaced as a
-portfolio company of 500-global. Its public API surface is documented on the POKKT developer wiki at
-https://wiki.pokkt.com — a supply-side Ad Server API and VAST Video API at `vdo.pokkt.com`, a hosted
-mobile-web rewarded-video surface, a server-to-server rewarded-video gratification callback, and a
-demand-side OpenRTB 2.5/2.6 bid endpoint with global, APAC and US hosts. Pokkt publishes an
-`llms.txt` index of its documentation and an IAB Tech Lab `sellers.json`, but no OpenAPI, no OAuth
-and no public pricing; the console GraphQL API at `api.pokkt.com/graphql` is authentication-gated,
-and the first-party client SDKs have not been republished since October 2021.
+Pokkt is a mobile-first advertising and app monetization platform, part of AnyMind Group, serving app publishers and game developers with SDK-based ad monetization (rewarded video, interstitial, and video advertising) and serving advertisers with performance campaigns, remarketing, and connected-TV (CTV) inventory across India, Southeast Asia, and MENA. Its public API surface is entirely ad-tech: a supply-side Ad Server API at vdo.pokkt.com serving JSON, HTML and VAST responses, a mobile-web rewarded video surface, a server-to-server rewarded-video gratification callback, and a demand-side OpenRTB 2.5/2.6 bid endpoint with global, APAC and US regional hosts. Pokkt publishes an llms.txt-indexed developer wiki and an IAB Tech Lab sellers.json, but no OpenAPI, no OAuth, and no public pricing; the console GraphQL API at api.pokkt.com is authentication-gated and its client SDKs have not been republished since October 2021.
 
-Backed by: 500-global — https://pokkt.com
+**Areas:** Company · Advertising · Monetization · Mobile · Video Advertising · AdTech · Remarketing · OpenRTB · Programmatic Advertising · Rewarded Video · Mobile SDK · Ad Serving
+
+## Pokkt on APIs.io
+
+Everything profiled for Pokkt is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/pokkt/](https://apis.io/providers/pokkt/)** — or go straight to one of the APIs or properties below.
+
+### APIs (6)
+
+- [POKKT Ad Server API](https://apis.io/apis/pokkt/ad-server-api/) — Supply-side ad request API. A single GET to /api/AdServer returns one or more ad objects for a full-screen interstitial or banner placement, as a JSON array…
+- [POKKT VAST Video API](https://apis.io/apis/pokkt/vast-video-api/) — Video ad request API for supply-side platforms. The same /api/AdServer endpoint called with response_format=1 responds with a VAST XML tag rather than a…
+- [POKKT DSP OpenRTB API](https://apis.io/apis/pokkt/dsp-openrtb-api/) — Demand-side bidding endpoint. Exchanges POST an OpenRTB bid request object as application/json to /api/rtb/<appid> with an x-openrtb-version header; POKKT…
+- [POKKT Mobile Web Video API](https://apis.io/apis/pokkt/mobile-web-video-api/) — Hosted rewarded-video surface for mobile web. The publisher opens /videoWap with its appId, a format selector and a URL-encoded `encodedparams` bag carrying…
+- [POKKT Gratification API](https://apis.io/apis/pokkt/gratification-api/) — Server-to-server rewarded-video confirmation callback. When a user completes a rewarded video, POKKT issues a GET to a publisher-hosted URL configured in…
+- [POKKT Console GraphQL API](https://apis.io/apis/pokkt/console-graphql-api/) — The GraphQL API behind the POKKT campaign-management console, live at api.pokkt.com/graphql and referenced directly by the console's own JavaScript bundle.…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Pokkt Webhooks](https://apis.io/asyncapis/pokkt/pokkt-webhooks/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Pokkt Authentication](https://apis.io/security/pokkt/pokkt-authentication/)
+- [Pokkt Domain Security](https://apis.io/security/pokkt/pokkt-domain-security/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Pokkt Plans Pricing](https://apis.io/plans/pokkt/pokkt-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Pokkt Rate Limits](https://apis.io/rate-limits/pokkt/pokkt-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://pokkt.com)
+- [Documentation](https://wiki.pokkt.com)
+- [Getting started](https://wiki.pokkt.com/pokkt-sdk)
+- [API reference](https://wiki.pokkt.com/api-guide)
+- [Privacy policy](https://anymindgroup.com/privacy-policy/)
+- [GitHub](https://github.com/AnyMindGroup)
+
+## API Evangelist rating
+
+**Kin Score 36.8** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 78.6 |
+| Contract quality | 39.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 10.5 |
+| Developer ergonomics | 57.1 |
+| Access clarity | 17.1 |
+
+**Agent readiness 25.2** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 20.6** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/pokkt/](https://apis.io/providers/pokkt/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Pokkt: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/pokkt/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
